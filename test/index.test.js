@@ -15,10 +15,10 @@ test('create gameBoard as array by fixed size', () => {
 
 test('place a ships start and end coord', () => {
   expect(board1.gameBoard).toStrictEqual([
-    ['X', '', '', '', '', '', '', '', '', ''],
-    ['X', '', '', '', '', '', '', '', '', ''],
-    ['X', '', '', '', '', '', '', '', '', ''],
-    ['X', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', ''],
@@ -43,4 +43,8 @@ test('check missedShots is being populated 2 items', () => {
     [3, 3],
     [4, 4],
   ]);
+});
+
+test('store a ship in array', () => {
+  expect(board1.shipStorage).toStrictEqual([ship1]);
 });
