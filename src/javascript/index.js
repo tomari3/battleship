@@ -14,12 +14,18 @@ const createShip = (length) => ({
 
 const createGameBoard = () => ({
   gameBoard: [
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
   ],
+  missedShots: [],
   placeShip(ship, column, row) {
     for (let i = 0; i < ship.length; i += 1) {
       this.gameBoard[column + i][row] = 'X';
@@ -31,12 +37,9 @@ const createGameBoard = () => ({
     if (this.gameBoard[column][row] === 'X') {
       return true;
     }
+    this.missedShots.push(attackCord);
     return false;
   },
 });
 
-const ship1 = createShip(4);
-const board1 = createGameBoard();
-board1.placeShip(ship1, 0, 0);
-
-export { createShip, createGameBoard, board1 };
+export { createShip, createGameBoard };
