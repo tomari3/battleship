@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     main: path.resolve(__dirname, './src/javascript/index.js'),
     interface: path.resolve(__dirname, './src/javascript/interface.js'),
+    game: path.resolve(__dirname, './src/javascript/game.js'),
   },
   devtool: 'inline-source-map',
   devServer: {

@@ -3,7 +3,7 @@ import { createShip, createGameBoard, newPlayer } from './index';
 import css from '../css/style.css';
 
 function Game() {
-  const root = document.getElementById('root');
+  const game = document.getElementById('game');
   const player = newPlayer('player', 0);
   const ai = newPlayer('ai', 1);
 
@@ -88,7 +88,7 @@ function Game() {
         row.append(div);
         gameDiv.append(row);
       }
-      root.append(gameDiv);
+      game.append(gameDiv);
     }
   }
   function renderEnemyBoard(board) {
@@ -104,7 +104,7 @@ function Game() {
         row.append(div);
         gameDiv.append(row);
       }
-      root.append(gameDiv);
+      game.append(gameDiv);
     }
   }
 
@@ -236,4 +236,4 @@ function Game() {
   aiBoardListener();
 }
 
-Game();
+export default Game();
