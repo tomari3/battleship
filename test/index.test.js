@@ -1,9 +1,11 @@
-import { createShip, createGameBoard } from '../src/javascript/index';
+import { createShip, createGameBoard, AI } from '../src/javascript/index';
 
 const ship1 = createShip(4);
 const board1 = createGameBoard();
 board1.placeShip(ship1, 0, 0);
 board1.receiveAttack([3, 3]);
+
+AI.board.placeShip(ship1, 0, 0);
 
 test('creates a new object with a specified length', () => {
   expect(createShip(12).length).toBe(12);
@@ -55,4 +57,27 @@ test('store a ship in array', () => {
 
 test('check setHit on ship1', () => {
   expect(ship1.hits).toStrictEqual([[0, 0]]);
+});
+
+test('check attacking enemy board', () => {
+  expect(AI.board.receiveAttack([1, 1])).toBe(false);
+});
+
+test('new ship on enemy board', () => {
+  expect(AI.board.gameBoard).toStrictEqual([
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['1', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', '', '', ''],
+  ]);
+});
+
+test('attack successes on enemy board', () => {
+  expect(AI.board.receiveAttack([0, 0])).toBe(true);
 });

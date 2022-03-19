@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 const createShip = (length) => ({
   ID: 0,
   hits: [],
@@ -58,4 +59,12 @@ const createGameBoard = () => ({
   },
 });
 
-export { createShip, createGameBoard };
+const player = {
+  board: createGameBoard(),
+};
+
+const AI = {
+  board: createGameBoard(),
+};
+
+export { createShip, createGameBoard, player, AI };
