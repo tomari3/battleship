@@ -15,6 +15,7 @@ const createShip = (length) => ({
 
 const createGameBoard = () => ({
   shipStorage: [],
+  shipCounter: 1,
   gameBoard: [
     ['', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', ''],
@@ -30,9 +31,12 @@ const createGameBoard = () => ({
   missedShots: [],
   placeShip(ship, column, row) {
     for (let i = 0; i < ship.length; i += 1) {
-      this.gameBoard[column + i][row] = '1';
+      this.gameBoard[column + i][row] = this.shipCounter.toString();
     }
+    // eslint-disable-next-line no-param-reassign
+    ship.ID = this.shipCounter;
     this.shipStorage.push(ship);
+    this.shipCounter += 1;
   },
   receiveAttack(attackCord) {
     const column = attackCord[0];

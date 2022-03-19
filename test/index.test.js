@@ -45,6 +45,10 @@ test('check missedShots is being populated 2 items', () => {
   ]);
 });
 
+test('check ship is assigned an Id', () => {
+  expect(ship1.ID).toBe(1);
+});
+
 test('store a ship in array', () => {
   expect(board1.shipStorage).toStrictEqual([ship1]);
 });
