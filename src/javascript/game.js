@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { createShip, createGameBoard, newPlayer } from './index';
 import css from '../css/style.css';
+import 'regenerator-runtime/runtime';
 
-function Game() {
+export default function Game() {
   const game = document.getElementById('game');
   const player = newPlayer('player', 0);
   const ai = newPlayer('ai', 1);
@@ -179,7 +180,35 @@ function Game() {
     }
   }
 
-  function listenerFunction(board, i, j) {
+  const aiCoord = {
+    myBoard: Array(10)
+      .fill(0)
+      .map(() => Array(10).fill(undefined)),
+    diagonal: 10,
+    lastGuess: null,
+    getRandomCoord() {
+      const min = 1;
+      const max = 10;
+      return Math.floor(Math.random() * (max - min)) + min;
+    },
+
+    takeAGuess() {
+      // const { board } = player;
+      const i = this.getRandomCoord();
+      const j = this.getRandomCoord();
+      if (this.myBoard[i - 1][j - 1] === undefined) {
+        return [i, j];
+      }
+
+      return this.takeAGuess();
+    },
+  };
+  function delay(milliseconds = 500) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, milliseconds);
+    });
+  }
+  async function listenerFunction(board, i, j) {
     if (player.board.isAllSunk() === true || ai.board.isAllSunk()) {
       console.log('game over');
       return;
@@ -189,6 +218,11 @@ function Game() {
       player.board.nextTurn();
     }
     renderChanges(board);
+    if (board.board.turn === 1) {
+      await delay();
+      const g = aiCoord.takeAGuess();
+      listenerFunction(player, g[0], g[1]);
+    }
   }
   function playerBoardListener() {
     const board = player;
@@ -213,6 +247,11 @@ function Game() {
   }
   function aiBoardListener() {
     const board = ai;
+    function getRandomCoord() {
+      const min = 1;
+      const max = board.board.gameBoard.length - 1;
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
     const gameBoard = document.querySelectorAll(`.game-board.${board.id}`);
     const columns = document.querySelectorAll(
       `.game-board.${board.id} .column`
@@ -235,5 +274,3 @@ function Game() {
   playerBoardListener();
   aiBoardListener();
 }
-
-export default Game();
