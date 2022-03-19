@@ -18,6 +18,12 @@ body {
   margin: 2.5vh 0;
 }
 
+/* .game-board.ai .column.ship,
+.game-board.ai .row.ship {
+  background-color: white;
+  font-size: 0;
+} */
+
 .game-board .column {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
@@ -40,7 +46,7 @@ body {
 }
 
 .game-board .row.ship {
-  background-color: rgba(0, 200, 255, 0.2);
+  background-color: rgba(0, 200, 255, 0.4);
 }
 
 .game-board .row:hover {

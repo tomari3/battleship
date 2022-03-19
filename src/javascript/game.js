@@ -9,6 +9,9 @@ function Game() {
 
   function randomShips(board) {
     let tries = 0;
+    function getRandomAlign() {
+      return Math.floor(Math.random() * 2);
+    }
     function getRandomCoord() {
       const min = 1;
       const max = board.board.gameBoard.length - 1;
@@ -35,7 +38,8 @@ function Game() {
       return board.board.placeShip(
         getRandomShip(),
         getRandomCoord(),
-        getRandomCoord()
+        getRandomCoord(),
+        getRandomAlign()
       );
     }
 
@@ -43,16 +47,10 @@ function Game() {
       tries += 1;
 
       if (tries === 1000) {
-        if (board.board.shipCounter < 11) {
-          return;
-        }
-        console.log('another try');
         tries = 0;
-        board.board.resetCounter();
-        board.board.resetShipStorage();
+        board.board.resetBoard();
         setShips();
-      }
-      setShips();
+      } else setShips();
     }
   }
 
@@ -85,7 +83,7 @@ function Game() {
         const div = elFactory('div', {});
         div.classList.add('row', `row-${j}`);
         if (board.board.gameBoard[i][j] !== undefined) {
-          div.textContent = board.board.gameBoard[i][j];
+          // div.textContent = board.board.gameBoard[i][j];
           div.classList.add('ship', `ship-${board.board.gameBoard[i][j]}`);
         }
         row.append(div);
@@ -97,11 +95,13 @@ function Game() {
 
   renderBoard(player);
   console.table(player.board.gameBoard);
-  // renderBoard(ai);
+  renderBoard(ai);
 
   function listenerFunction(board, i, j) {
-    console.log(i, j);
-    board.board.resetShipStorage();
+    if (player.board.isAllSunk() === true || ai.board.isAllSunk()) {
+      console.log('game over');
+      return;
+    }
     if (board.board.receiveAttack([i, j]) === 'next') {
       ai.board.nextTurn();
       player.board.nextTurn();
