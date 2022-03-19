@@ -3,18 +3,46 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .game-board {
-  width: 400px;
-  height: 400px;
+  min-width: 200px;
+  min-height: 200px;
+  width: calc(45vmax - 3vw);
+  height: calc(45vmax - 3vw);
   display: grid;
-  grid-template-columns: repeat(10, auto);
-  grid-template-rows: repeat(10, auto);
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(10, 1fr);
   border-right: 1px solid rgba(23, 130, 159, 0.5);
   border-bottom: 1px solid rgba(23, 130, 159, 0.5);
+  justify-content: space-between;
+  margin: 2.5vh 0;
 }
 
-.game-board div {
+.game-board .column {
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: 1fr;
+}
+
+/* .game-board .column:first-child,
+.game-board .column:last-child {
+  display: none;
+}
+.game-board .row:first-child,
+.game-board .row:last-child {
+  display: none;
+} */
+
+.game-board .row {
   border: 1px solid rgba(23, 130, 159, 0.5);
   border-bottom: 0;
   border-right: 0;
+}
+
+.game-board .row.ship {
+  background-color: rgba(0, 200, 255, 0.2);
+}
+
+.game-board .row:hover {
+  background-color: rgba(0, 200, 255, 0.1);
 }

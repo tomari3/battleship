@@ -1,11 +1,10 @@
-import { createShip, createGameBoard, AI } from '../src/javascript/index';
+/* eslint-disable no-undef */
+import { createShip, createGameBoard } from '../src/javascript/index';
 
 const ship1 = createShip(4);
 const board1 = createGameBoard();
 board1.placeShip(ship1, 0, 0);
 board1.receiveAttack([3, 3]);
-
-AI.board.placeShip(ship1, 0, 0);
 
 test('creates a new object with a specified length', () => {
   expect(createShip(12).length).toBe(12);

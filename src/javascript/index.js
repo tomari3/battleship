@@ -1,70 +1,107 @@
 /* eslint-disable object-curly-newline */
-const createShip = (length) => ({
-  ID: 0,
-  hits: [],
+const createShip = (length, ID) => ({
+  ID,
   length,
   sunkStatus: false,
+  hits: [],
+  // sunkStatus: false,
   setHit(cord) {
     this.hits.push(cord);
   },
   isSunk() {
     if (this.hits.length >= this.length) {
       this.sunkStatus = true;
+      return true;
     }
+    return false;
   },
 });
 
-const createGameBoard = () => ({
-  gameBoard: [
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', '', '', ''],
-  ],
+const createGameBoard = (myTurn) => ({
+  gameBoard: Array(12)
+    .fill(0)
+    .map(() => Array(12).fill(undefined)),
   shipStorage: [],
   shipCounter: 1,
   missedShots: [],
+  sunkStatus: false,
+  turn: 0,
+  // 0 = attack player , 1 = attack ai
+  resetCounter() {
+    this.shipCounter = 1;
+  },
+  resetShipStorage() {
+    this.shipStorage.length = 0;
+  },
+  nextTurn() {
+    this.turn = 1 - this.turn;
+  },
+  isPlacementValid(ship, column, row) {
+    if (
+      ship.length + column > this.gameBoard.length - 1 ||
+      ship.length + row > this.gameBoard.length - 1
+    )
+      return false;
+    if (this.gameBoard[column][row] !== undefined) return false;
+    for (let i = 0; i < ship.length + 1; i += 1) {
+      if (
+        this.gameBoard[column + i][row] !== undefined ||
+        this.gameBoard[column + i][row + 1] !== undefined ||
+        this.gameBoard[column + i][row - 1] !== undefined ||
+        this.gameBoard[column - 1][row + 1] !== undefined ||
+        this.gameBoard[column - 1][row - 1] !== undefined ||
+        this.gameBoard[column - 1][row] !== undefined
+      )
+        return false;
+    }
+
+    return true;
+  },
+  isAttackValid() {
+    return this.turn === myTurn;
+  },
+
   placeShip(ship, column, row) {
+    if (this.isPlacementValid(ship, column, row) === false) {
+      return;
+    }
     for (let i = 0; i < ship.length; i += 1) {
       this.gameBoard[column + i][row] = this.shipCounter.toString();
     }
-    // eslint-disable-next-line no-param-reassign
-    ship.ID = this.shipCounter;
     this.shipStorage.push(ship);
     this.shipCounter += 1;
   },
   receiveAttack(attackCord) {
     const column = attackCord[0];
     const row = attackCord[1];
-    if (this.gameBoard[column][row] !== '') {
-      const id = Number(this.gameBoard[column][row]);
-      const ship = this.shipStorage.find((x) => x.ID === id);
+    const id = Number(this.gameBoard[column][row]);
+    const ship = this.shipStorage.find((x) => x.ID === id);
+
+    if (!this.isAttackValid(ship)) {
+      return false;
+    }
+    if (this.gameBoard[column][row] !== undefined) {
       ship.setHit(attackCord);
+      ship.isSunk();
+      this.isAllSunk();
       return true;
     }
     this.missedShots.push(attackCord);
-    return false;
+    return 'next';
   },
   isAllSunk() {
     if (this.shipStorage.every((ship) => ship.sunkStatus === true)) {
+      this.sunkStatus = true;
       return true;
     }
     return false;
   },
 });
 
-const player = {
-  board: createGameBoard(),
-};
+const newPlayer = (id, sign) => ({
+  turn: Boolean,
+  id,
+  board: createGameBoard(sign),
+});
 
-const AI = {
-  board: createGameBoard(),
-};
-
-export { createShip, createGameBoard, player, AI };
+export { createShip, createGameBoard, newPlayer };
