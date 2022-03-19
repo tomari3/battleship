@@ -14,8 +14,6 @@ const createShip = (length) => ({
 });
 
 const createGameBoard = () => ({
-  shipStorage: [],
-  shipCounter: 1,
   gameBoard: [
     ['', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', ''],
@@ -28,6 +26,8 @@ const createGameBoard = () => ({
     ['', '', '', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', '', '', ''],
   ],
+  shipStorage: [],
+  shipCounter: 1,
   missedShots: [],
   placeShip(ship, column, row) {
     for (let i = 0; i < ship.length; i += 1) {
@@ -42,9 +42,18 @@ const createGameBoard = () => ({
     const column = attackCord[0];
     const row = attackCord[1];
     if (this.gameBoard[column][row] !== '') {
+      const id = Number(this.gameBoard[column][row]);
+      const ship = this.shipStorage.find((x) => x.ID === id);
+      ship.setHit(attackCord);
       return true;
     }
     this.missedShots.push(attackCord);
+    return false;
+  },
+  isAllSunk() {
+    if (this.shipStorage.every((ship) => ship.sunkStatus === true)) {
+      return true;
+    }
     return false;
   },
 });

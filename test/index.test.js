@@ -52,3 +52,7 @@ test('check ship is assigned an Id', () => {
 test('store a ship in array', () => {
   expect(board1.shipStorage).toStrictEqual([ship1]);
 });
+
+test('check setHit on ship1', () => {
+  expect(ship1.hits).toStrictEqual([[0, 0]]);
+});
