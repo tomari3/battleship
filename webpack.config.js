@@ -6,6 +6,7 @@ module.exports = {
   mode: 'development',
   entry: {
     main: path.resolve(__dirname, './src/javascript/index.js'),
+    interface: path.resolve(__dirname, './src/javascript/interface.js'),
   },
   devtool: 'inline-source-map',
   devServer: {
