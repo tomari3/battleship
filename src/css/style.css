@@ -18,26 +18,11 @@ body {
   margin: 2.5vh 0;
 }
 
-/* .game-board.ai .column.ship,
-.game-board.ai .row.ship {
-  background-color: white;
-  font-size: 0;
-} */
-
 .game-board .column {
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   grid-template-columns: 1fr;
 }
-
-/* .game-board .column:first-child,
-.game-board .column:last-child {
-  display: none;
-}
-.game-board .row:first-child,
-.game-board .row:last-child {
-  display: none;
-} */
 
 .game-board .row {
   border: 1px solid rgba(23, 130, 159, 0.5);
@@ -45,10 +30,100 @@ body {
   border-right: 0;
 }
 
+.game-board .row.missed-shot {
+  background-color: rgba(0, 64, 255, 0.2);
+}
+
 .game-board .row.ship {
   background-color: rgba(0, 200, 255, 0.4);
 }
-
-.game-board .row:hover {
+.game-board.ai .row.ship {
+  background-color: inherit;
+}
+/* .game-board .row:hover {
   background-color: rgba(0, 200, 255, 0.1);
+} */
+
+.game-board .row.missed-shot::before {
+  content: '·';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  font-size: 2em;
+  margin: 50% 0;
+}
+.game-board .row.unavailable-block {
+  background-color: rgba(0, 64, 255, 0.1);
+}
+
+.game-board .row.unavailable-block::before {
+  content: '·';
+  color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  font-size: 2em;
+  margin: 50% 0;
+}
+.game-board.ai .row.hit-shot {
+  background-color: rgba(255, 0, 0, 0.4);
+}
+.game-board .row.hit-shot {
+  background-color: rgba(255, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: bolder;
+  border: 2px solid red;
+  position: relative;
+}
+
+.game-board .row.hit-shot::after,
+.game-board .row.hit-shot::before {
+  position: absolute;
+  content: '';
+  width: 140%;
+  height: 2px; /* cross thickness */
+  background-color: red;
+}
+
+.game-board .row.hit-shot::after {
+  transform: rotate(-45deg);
+}
+
+.game-board .row.hit-shot::before {
+  transform: rotate(45deg);
+}
+.game-board.ai .row.ship-sunk {
+  background-color: rgba(255, 0, 0, 0.4);
+}
+.game-board .row.ship-sunk {
+  background-color: rgba(255, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: bolder;
+  border: 2px solid red;
+  position: relative;
+}
+
+.game-board .row.ship-sunk::after,
+.game-board .row.ship-sunk::before {
+  position: absolute;
+  content: '';
+  width: 140%;
+  height: 2px; /* cross thickness */
+  background-color: red;
+}
+
+.game-board .row.ship-sunk::after {
+  transform: rotate(-45deg);
+}
+
+.game-board .row.ship-sunk::before {
+  transform: rotate(45deg);
 }

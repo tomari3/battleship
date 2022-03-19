@@ -75,7 +75,7 @@ function Game() {
     return el;
   };
 
-  function renderBoard(board) {
+  function renderFriendlyBoard(board) {
     const gameDiv = elFactory('div', { class: `game-board ${board.id}` });
     for (let i = 1; i < board.board.gameBoard.length - 1; i += 1) {
       const row = elFactory('div', { class: `column column-${i}` });
@@ -83,7 +83,22 @@ function Game() {
         const div = elFactory('div', {});
         div.classList.add('row', `row-${j}`);
         if (board.board.gameBoard[i][j] !== undefined) {
-          // div.textContent = board.board.gameBoard[i][j];
+          div.classList.add('ship', `ship-${board.board.gameBoard[i][j]}`);
+        }
+        row.append(div);
+        gameDiv.append(row);
+      }
+      root.append(gameDiv);
+    }
+  }
+  function renderEnemyBoard(board) {
+    const gameDiv = elFactory('div', { class: `game-board ${board.id}` });
+    for (let i = 1; i < board.board.gameBoard.length - 1; i += 1) {
+      const row = elFactory('div', { class: `column column-${i}` });
+      for (let j = 1; j < board.board.gameBoard[i].length - 1; j += 1) {
+        const div = elFactory('div', {});
+        div.classList.add('row', `row-${j}`);
+        if (board.board.gameBoard[i][j] !== undefined) {
           div.classList.add('ship', `ship-${board.board.gameBoard[i][j]}`);
         }
         row.append(div);
@@ -93,9 +108,76 @@ function Game() {
     }
   }
 
-  renderBoard(player);
-  console.table(player.board.gameBoard);
-  renderBoard(ai);
+  renderFriendlyBoard(player);
+  renderFriendlyBoard(ai);
+
+  function renderChanges(board) {
+    const { missedShots, hits, shipStorage } = board.board;
+    missedShots.forEach((array) => {
+      const i = array[0];
+      const j = array[1];
+      const row = document.querySelector(
+        `.game-board.${board.id} .column-${i} .row-${j}`
+      );
+      row.classList.add('missed-shot');
+    });
+    hits.forEach((array) => {
+      const i = array[0];
+      const j = array[1];
+      const row = document.querySelector(
+        `.game-board.${board.id} .column-${i} .row-${j}`
+      );
+      row.classList.add('hit-shot');
+    });
+    shipStorage.forEach((ship) => {
+      if (ship.sunkStatus === true) {
+        const shipParts = document.querySelectorAll(
+          `.game-board.${board.id} .ship-${ship.ID}`
+        );
+        shipParts.forEach((node) => {
+          node.classList.remove('hit-shot');
+          node.classList.add('ship-sunk');
+        });
+      }
+    });
+    const rows = document.querySelectorAll(`.game-board.${board.id} .row`);
+    function checkAdd(item) {
+      if (item !== undefined && !item.classList.contains('missed-shot')) {
+        item.classList.add('unavailable-block');
+      }
+    }
+    for (let i = 0; i < rows.length; i += 1) {
+      if (rows[i].classList.contains('ship-sunk')) {
+        console.log(i);
+        if (i % 10 === 9) {
+          console.log('edge');
+          checkAdd(rows[i - 1]);
+          checkAdd(rows[i + 9]);
+          checkAdd(rows[i + 10]);
+          checkAdd(rows[i - 10]);
+          checkAdd(rows[i - 11]);
+        }
+        if (i % 10 === 0) {
+          console.log('edge');
+          checkAdd(rows[i + 1]);
+          checkAdd(rows[i + 10]);
+          checkAdd(rows[i - 10]);
+          checkAdd(rows[i - 9]);
+          checkAdd(rows[i + 11]);
+        }
+        if (i % 10 > 0 && i % 10 < 9) {
+          checkAdd(rows[i + 1]);
+          checkAdd(rows[i - 1]);
+          checkAdd(rows[i + 9]);
+          checkAdd(rows[i - 9]);
+          checkAdd(rows[i + 10]);
+          checkAdd(rows[i - 10]);
+          checkAdd(rows[i + 11]);
+          checkAdd(rows[i - 11]);
+        }
+      }
+    }
+  }
 
   function listenerFunction(board, i, j) {
     if (player.board.isAllSunk() === true || ai.board.isAllSunk()) {
@@ -106,6 +188,7 @@ function Game() {
       ai.board.nextTurn();
       player.board.nextTurn();
     }
+    renderChanges(board);
   }
   function playerBoardListener() {
     const board = player;

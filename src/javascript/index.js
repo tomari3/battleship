@@ -4,7 +4,7 @@ const createShip = (length, ID) => ({
   length,
   sunkStatus: false,
   hits: [],
-  // sunkStatus: false,
+  coords: [],
   setHit(cord) {
     this.hits.push(cord);
   },
@@ -25,6 +25,7 @@ const createGameBoard = (myTurn) => ({
   shipStorage: [],
   shipCounter: 1,
   missedShots: [],
+  hits: [],
   sunkStatus: false,
   turn: 0,
   // 0 = attack player , 1 = attack ai
@@ -100,6 +101,7 @@ const createGameBoard = (myTurn) => ({
     for (let i = 0; i < ship.length; i += 1) {
       this.gameBoard[column + i][row] = this.shipCounter.toString();
     }
+    ship.coords.push(column, row);
     this.shipStorage.push(ship);
     this.shipCounter += 1;
   },
@@ -110,8 +112,17 @@ const createGameBoard = (myTurn) => ({
     for (let i = 0; i < ship.length; i += 1) {
       this.gameBoard[column][row + i] = this.shipCounter.toString();
     }
+    ship.coords.push(column, row);
     this.shipStorage.push(ship);
     this.shipCounter += 1;
+  },
+  placeShip(ship, column, row, align) {
+    if (align === 0) {
+      this.placeHorizon(ship, column, row);
+    }
+    if (align === 1) {
+      this.placeVertical(ship, column, row);
+    }
   },
   isAttackValid(ship, attackCord) {
     if (this.turn === myTurn) {
@@ -136,15 +147,6 @@ const createGameBoard = (myTurn) => ({
     }
     return true;
   },
-  placeShip(ship, column, row, align) {
-    if (align === 0) {
-      this.placeHorizon(ship, column, row);
-    }
-    if (align === 1) {
-      this.placeVertical(ship, column, row);
-    }
-  },
-
   receiveAttack(attackCord) {
     const column = attackCord[0];
     const row = attackCord[1];
@@ -157,6 +159,7 @@ const createGameBoard = (myTurn) => ({
     if (this.gameBoard[column][row] !== undefined) {
       ship.setHit(attackCord);
       ship.isSunk();
+      this.hits.push(attackCord);
       if (this.isAllSunk()) {
         console.log('everything sunk! you lost');
         return false;
